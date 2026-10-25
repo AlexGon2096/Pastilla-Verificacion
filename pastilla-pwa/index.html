@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mi pastilla diaria</title>
+  <meta name="theme-color" content="#e0577f">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <style>
+    :root {
+      --bg: #fdf6f8;
+      --card: #fff;
+      --text: #3a2a31;
+      --muted: #8a7480;
+      --accent: #e0577f;
+      --accent2: #fbe3ea;
+      --ok: #3aa675;
+      --line: #f0dde3;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px)
+    }
+
+    @media (prefers-color-scheme:dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #1d1519;
+        --card: #2a1f24;
+        --text: #f5e8ed;
+        --muted: #b49aa5;
+        --accent: #f06c94;
+        --accent2: #43262f;
+        --ok: #4cc38a;
+        --line: #3d2c34
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #1d1519;
+      --card: #2a1f24;
+      --text: #f5e8ed;
+      --muted: #b49aa5;
+      --accent: #f06c94;
+      --accent2: #43262f;
+      --ok: #4cc38a;
+      --line: #3d2c34
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      justify-content: center
+    }
+
+    main {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px 16px 32px
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      margin: 0 0 2px
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: .9rem;
+      margin: 0 0 18px
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 14px
+    }
+
+    .big {
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      padding: 20px 12px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer
+    }
+
+    .big.done {
+      background: var(--ok)
+    }
+
+    .big:active {
+      transform: scale(.98)
+    }
+
+    .status {
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+      margin-top: 10px;
+      min-height: 1.2em
+    }
+
+    .stats {
+      display: flex;
+      gap: 10px
+    }
+
+    .stat {
+      flex: 1;
+      background: var(--accent2);
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center
+    }
+
+    .stat b {
+      display: block;
+      font-size: 1.5rem
+    }
+
+    .stat span {
+      font-size: .78rem;
+      color: var(--muted)
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px
+    }
+
+    .nav button {
+      background: var(--accent2);
+      color: var(--text);
+      border: 0;
+      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      font-size: 1.1rem;
+      cursor: pointer
+    }
+
+    .nav strong {
+      text-transform: capitalize
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      text-align: center
+    }
+
+    .dow {
+      font-size: .7rem;
+      color: var(--muted)
+    }
+
+    .d {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--text);
+      font-size: .85rem;
+      cursor: pointer;
+      padding: 0
+    }
+
+    .d.empty {
+      border: 0;
+      cursor: default
+    }
+
+    .d.on {
+      background: var(--ok);
+      border-color: var(--ok);
+      color: #fff;
+      font-weight: 700
+    }
+
+    .d.today {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px
+    }
+
+    .d.future {
+      opacity: .35;
+      cursor: default
+    }
+
+    .d.miss {
+      background: var(--accent2)
+    }
+
+    .hint {
+      font-size: .78rem;
+      color: var(--muted);
+      margin: 10px 0 0;
+      text-align: center
+    }
+
+    label {
+      font-size: .8rem;
+      color: var(--muted)
+    }
+
+    input {
+      width: 100%;
+      margin-top: 4px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>💊 Mi pastilla diaria</h1>
+    <p class="sub" id="sub"></p>
+
+    <div class="card">
+      <button class="big" id="btn"></button>
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="card stats">
+      <div class="stat"><b id="streak">0</b><span>días seguidos</span></div>
+      <div class="stat"><b id="month">0</b><span>este mes</span></div>
+      <div class="stat"><b id="total">0</b><span>en total</span></div>
+    </div>
+
+    <div class="card">
+      <div class="nav">
+        <button id="prev" aria-label="Mes anterior">‹</button>
+        <strong id="mlabel"></strong>
+        <button id="next" aria-label="Mes siguiente">›</button>
+      </div>
+      <div class="grid" id="grid"></div>
+      <p class="hint">Toca un día para marcarlo o desmarcarlo si te olvidaste de registrar.</p>
+    </div>
+
+    <div class="card">
+      <label for="name">Nombre de la pastilla (opcional)</label>
+      <input id="name" placeholder="Ej: Anticonceptivo" maxlength="40">
+    </div>
+  </main>
+
+  <script>
+    if ('serviceWorker' in navigator) {window.addEventListener('load', function () {navigator.serviceWorker.register('sw.js').catch(function () { });});}
+    (function () {
+      var KEY = 'pastilla-v1';
+      var state = {log: {}, name: ''};
+      try {var raw = localStorage.getItem(KEY); if (raw) {var p = JSON.parse(raw); if (p && p.log) state = p;} } catch (e) { }
+      function save() {try {localStorage.setItem(KEY, JSON.stringify(state));} catch (e) { } }
+
+      function pad(n) {return n < 10 ? '0' + n : '' + n;}
+      function key(d) {return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());}
+      var now = new Date();
+      var todayKey = key(now);
+      var view = new Date(now.getFullYear(), now.getMonth(), 1);
+      var $ = function (id) {return document.getElementById(id);};
+
+      function streak() {
+        var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        if (!state.log[key(d)]) d.setDate(d.getDate() - 1);
+        var n = 0;
+        while (state.log[key(d)]) {n++; d.setDate(d.getDate() - 1);}
+        return n;
+      }
+
+      function render() {
+        var name = state.name || 'tu pastilla';
+        $('sub').textContent = now.toLocaleDateString('es', {weekday: 'long', day: 'numeric', month: 'long'});
+        var done = !!state.log[todayKey];
+        var b = $('btn');
+        b.className = 'big' + (done ? ' done' : '');
+        b.textContent = done ? '✓ ¡Listo por hoy!' : 'Ya tomé ' + name;
+        $('status').textContent = done ? ('Registrada a las ' + state.log[todayKey] + ' · toca para deshacer') : 'Aún no la has registrado hoy';
+
+        $('streak').textContent = streak();
+        $('total').textContent = Object.keys(state.log).length;
+        var prefix = view.getFullYear() + '-' + pad(view.getMonth() + 1);
+        var cm = 0; for (var k in state.log) {if (k.indexOf(prefix) === 0) cm++;}
+        $('month').textContent = cm;
+
+        $('mlabel').textContent = view.toLocaleDateString('es', {month: 'long', year: 'numeric'});
+        var g = $('grid'); g.innerHTML = '';
+        ['L', 'M', 'X', 'J', 'V', 'S', 'D'].forEach(function (x) {var e = document.createElement('div'); e.className = 'dow'; e.textContent = x; g.appendChild(e);});
+        var first = (view.getDay() + 6) % 7;
+        var days = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+        for (var i = 0; i < first; i++) {var e = document.createElement('div'); e.className = 'd empty'; g.appendChild(e);}
+        for (var day = 1; day <= days; day++) {
+          var dt = new Date(view.getFullYear(), view.getMonth(), day);
+          var k2 = key(dt);
+          var btn = document.createElement('button');
+          var future = dt > new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          var cls = 'd';
+          if (state.log[k2]) cls += ' on';
+          else if (!future && k2 !== todayKey) cls += ' miss';
+          if (k2 === todayKey) cls += ' today';
+          if (future) cls += ' future';
+          btn.className = cls;
+          btn.textContent = day;
+          if (!future) {(function (kk) {btn.onclick = function () {toggle(kk);};})(k2);}
+          g.appendChild(btn);
+        }
+      }
+
+      function toggle(k) {
+        if (state.log[k]) delete state.log[k];
+        else state.log[k] = (k === todayKey) ? pad(new Date().getHours()) + ':' + pad(new Date().getMinutes()) : '--:--';
+        save(); render();
+      }
+
+      $('btn').onclick = function () {toggle(todayKey);};
+      $('prev').onclick = function () {view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render();};
+      $('next').onclick = function () {view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render();};
+      $('name').value = state.name || '';
+      $('name').oninput = function (e) {state.name = e.target.value; save(); render();};
+      render();
+    })();
+  </script>
+</body>
+
+</html>

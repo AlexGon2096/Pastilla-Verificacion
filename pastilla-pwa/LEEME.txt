@@ -1,0 +1,6 @@
+PASTILLA - PWA lista para subir
+Archivos: index.html, manifest.webmanifest, sw.js, carpeta icons/
+Sube TODO el contenido (no la carpeta contenedora) a un hosting con HTTPS:
+ - Netlify Drop: app.netlify.com/drop (arrastra la carpeta)
+ - GitHub Pages
+Luego en pwabuilder.com pega la URL publica y descarga el paquete Android.
